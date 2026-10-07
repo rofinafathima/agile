@@ -5,6 +5,8 @@ import { ordersAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 
+const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
+
 const STATUS_LABELS = {
   placed: { label: 'Order Placed', color: 'badge-info' },
   payment_confirmed: { label: 'Payment Confirmed', color: 'badge-success' },
@@ -107,8 +109,15 @@ export default function OrdersPage() {
                     {/* Items */}
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
                       {order.items?.slice(0, 3).map(item => (
-                        <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'var(--gray-50)', borderRadius: 8, padding: '6px 10px', fontSize: 13 }}>
-                          💊 <span style={{ fontWeight: 600 }}>{item.medicine_name}</span>
+                        <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'var(--gray-50)', borderRadius: 8, padding: '4px 10px', fontSize: 13 }}>
+                          {item.image_url ? (
+                            <img
+                              src={item.image_url.startsWith('http') ? item.image_url : `${BASE_URL}${item.image_url}`}
+                              alt={item.medicine_name}
+                              style={{ width: 22, height: 22, borderRadius: 4, objectFit: 'cover' }}
+                            />
+                          ) : '💊'}
+                          <span style={{ fontWeight: 600 }}>{item.medicine_name}</span>
                           <span style={{ color: 'var(--gray-400)' }}>×{item.quantity}</span>
                         </div>
                       ))}

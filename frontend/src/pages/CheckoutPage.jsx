@@ -6,6 +6,8 @@ import { useAuth } from '../context/AuthContext';
 import { addressesAPI, prescriptionsAPI, ordersAPI, paymentsAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
+const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
+
 const STEPS = [
   { id: 1, label: 'Cart Review' },
   { id: 2, label: 'Delivery' },
@@ -120,7 +122,17 @@ export default function CheckoutPage() {
             <div>
               {cart.items?.map(item => (
                 <div key={item.id} style={{ display: 'flex', gap: 16, padding: '16px 24px', borderBottom: '1px solid var(--gray-100)' }}>
-                  <div style={{ fontSize: 28, background: 'var(--gray-50)', borderRadius: 8, width: 52, height: 52, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>💊</div>
+                  <div style={{ width: 52, height: 52, borderRadius: 8, overflow: 'hidden', background: 'var(--gray-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid var(--gray-200)' }}>
+                    {item.image_url ? (
+                      <img
+                        src={item.image_url.startsWith('http') ? item.image_url : `${BASE_URL}${item.image_url}`}
+                        alt={item.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    ) : (
+                      <span style={{ fontSize: 24 }}>💊</span>
+                    )}
+                  </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--gray-800)' }}>{item.name}</div>
                     <div style={{ fontSize: 12, color: 'var(--gray-500)' }}>{item.strength} · Qty: {item.quantity}</div>

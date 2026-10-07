@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Search, X } from 'lucide-react';
 import { medicinesAPI } from '../services/api';
 
+const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
+
 export default function SearchBar({ onSearch, placeholder = 'Search medicines, brands...' }) {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
@@ -93,7 +95,17 @@ export default function SearchBar({ onSearch, placeholder = 'Search medicines, b
                 onClick={() => handleSelect(med)}
                 style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
               >
-                <div style={{ fontSize: 20 }}>💊</div>
+                <div style={{ width: 32, height: 32, borderRadius: 6, overflow: 'hidden', background: 'var(--gray-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid var(--gray-200)' }}>
+                  {med.image_url ? (
+                    <img
+                      src={med.image_url.startsWith('http') ? med.image_url : `${BASE_URL}${med.image_url}`}
+                      alt={med.name}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                  ) : (
+                    <span style={{ fontSize: 16 }}>💊</span>
+                  )}
+                </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div className="search-suggestion-label">{med.name}</div>
                   <div className="search-suggestion-sub">

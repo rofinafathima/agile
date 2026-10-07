@@ -21,7 +21,9 @@ export default function MedicineCard({ medicine }) {
 
   const stockInfo = getStockInfo(medicine.stock_quantity, medicine.low_stock_threshold || 10);
   const discountedPrice = medicine.unit_price * (1 - (medicine.discount || 0) / 100);
-  const imageUrl = medicine.image_url ? `${MEDICINE_BASE}${medicine.image_url}` : null;
+  const imageUrl = medicine.image_url 
+    ? (medicine.image_url.startsWith('http') ? medicine.image_url : `${MEDICINE_BASE}${medicine.image_url}`)
+    : null;
 
   const handleAddToCart = async (e) => {
     e.preventDefault();

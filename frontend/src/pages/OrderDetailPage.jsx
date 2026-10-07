@@ -4,6 +4,8 @@ import { CheckCircle, Circle, Clock, MapPin, Package, CreditCard, RotateCcw } fr
 import { ordersAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
+const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
+
 const ALL_STATUSES = [
   { key: 'placed', label: 'Order Placed', icon: '📋', desc: 'Your order has been placed successfully.' },
   { key: 'payment_confirmed', label: 'Payment Confirmed', icon: '💳', desc: 'Your payment has been received.' },
@@ -123,7 +125,17 @@ export default function OrderDetailPage() {
               <div className="card-header"><span className="card-title"><Package size={18} style={{ marginRight: 8 }} />Items Ordered</span></div>
               {order.items?.map(item => (
                 <div key={item.id} style={{ display: 'flex', gap: 14, padding: '14px 24px', borderBottom: '1px solid var(--gray-100)' }}>
-                  <div style={{ width: 44, height: 44, background: 'var(--gray-50)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>💊</div>
+                  <div style={{ width: 44, height: 44, background: 'var(--gray-50)', borderRadius: 8, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: '1px solid var(--gray-200)' }}>
+                    {item.image_url ? (
+                      <img
+                        src={item.image_url.startsWith('http') ? item.image_url : `${BASE_URL}${item.image_url}`}
+                        alt={item.medicine_name}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    ) : (
+                      <span style={{ fontSize: 22 }}>💊</span>
+                    )}
+                  </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontWeight: 700, fontSize: 14 }}>{item.medicine_name}</div>
                     <div style={{ fontSize: 12, color: 'var(--gray-500)' }}>{item.medicine_strength} · Qty: {item.quantity}</div>

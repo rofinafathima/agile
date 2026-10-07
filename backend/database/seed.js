@@ -95,7 +95,7 @@ function seed() {
       warnings: 'Do not exceed recommended dose. Consult doctor if symptoms persist beyond 3 days. Not recommended for patients with liver disease without medical advice.',
       side_effects: 'Nausea, Allergic reactions (rare), Skin rash (rare). Consult your doctor if you experience any adverse effects.',
       dosage_info: 'As directed by your physician. This information is for reference only.', 
-      image_url: null, stock: 500, threshold: 50
+      image_url: '/uploads/medicines/dolo_650.jpg', stock: 500, threshold: 50
     },
     {
       name: 'Crocin Advance', generic_name: 'Paracetamol', brand: 'Crocin', manufacturer: 'GlaxoSmithKline',
@@ -108,7 +108,7 @@ function seed() {
       warnings: 'Do not take more than the recommended dose. Avoid with alcohol. Consult doctor if symptoms persist.',
       side_effects: 'Nausea, Allergic skin reactions (rare). Seek medical attention if adverse effects occur.',
       dosage_info: 'As directed by your physician.', 
-      image_url: null, stock: 800, threshold: 100
+      image_url: '/uploads/medicines/crocin_advance.jpg', stock: 800, threshold: 100
     },
     {
       name: 'Combiflam', generic_name: 'Ibuprofen + Paracetamol', brand: 'Combiflam', manufacturer: 'Sanofi India',
@@ -121,7 +121,7 @@ function seed() {
       warnings: 'Not recommended for patients with gastric ulcers or bleeding disorders. Avoid with alcohol.',
       side_effects: 'Stomach pain, Nausea, Dizziness (uncommon). Consult your doctor if side effects persist.',
       dosage_info: 'As directed by your physician.', 
-      image_url: null, stock: 350, threshold: 40
+      image_url: '/uploads/medicines/combiflam.jpg', stock: 350, threshold: 40
     },
     {
       name: 'Voveran SR 100', generic_name: 'Diclofenac Sodium', brand: 'Voveran', manufacturer: 'Novartis India',
@@ -134,7 +134,7 @@ function seed() {
       warnings: 'Prescription required. Not recommended for patients with kidney, liver, or heart conditions without medical advice. Avoid with blood thinners.',
       side_effects: 'Stomach upset, Nausea, Dizziness. Report unusual symptoms to your doctor immediately.',
       dosage_info: 'Strictly as prescribed by your physician.', 
-      image_url: null, stock: 200, threshold: 30
+      image_url: '/uploads/medicines/voveran_sr_100.jpg', stock: 200, threshold: 30
     },
 
     // Fever & Cold
@@ -149,7 +149,7 @@ function seed() {
       warnings: 'May cause drowsiness. Do not drive or operate machinery after taking. Not for children under 12 without medical advice.',
       side_effects: 'Drowsiness, Dry mouth, Dizziness. Consult doctor if symptoms worsen.',
       dosage_info: 'As directed by your physician.', 
-      image_url: null, stock: 450, threshold: 50
+      image_url: '/uploads/medicines/sinarest_new.jpg', stock: 450, threshold: 50
     },
     {
       name: 'Cetrizine 10mg', generic_name: 'Cetirizine Hydrochloride', brand: 'Okacet', manufacturer: 'Cipla Ltd',
@@ -162,7 +162,7 @@ function seed() {
       warnings: 'May cause drowsiness in some individuals. Avoid alcohol.',
       side_effects: 'Drowsiness, Dry mouth, Headache (uncommon).',
       dosage_info: 'As directed by your physician.', 
-      image_url: null, stock: 600, threshold: 50
+      image_url: '/uploads/medicines/cetrizine_10mg.jpg', stock: 600, threshold: 50
     },
     {
       name: 'Azithral 500', generic_name: 'Azithromycin', brand: 'Azithral', manufacturer: 'Alembic Pharma',
@@ -175,7 +175,7 @@ function seed() {
       warnings: 'Prescription required. Complete the full course of antibiotics. Do not self-medicate.',
       side_effects: 'Diarrhoea, Nausea, Abdominal pain. Report allergic reactions immediately.',
       dosage_info: 'Strictly as prescribed by your physician. Do not alter the course.', 
-      image_url: null, stock: 120, threshold: 20
+      image_url: '/uploads/medicines/azithral_500.jpg', stock: 120, threshold: 20
     },
 
     // Diabetes
@@ -190,7 +190,7 @@ function seed() {
       warnings: 'Prescription required. Regular blood sugar monitoring is essential. Inform doctor about kidney/liver conditions.',
       side_effects: 'Hypoglycemia, Nausea, Stomach upset. Monitor blood sugar regularly.',
       dosage_info: 'Strictly as prescribed by your physician. Regular monitoring required.', 
-      image_url: null, stock: 300, threshold: 30
+      image_url: '/uploads/medicines/glycomet_gp_2.jpg', stock: 300, threshold: 30
     },
     {
       name: 'Janumet 50/500', generic_name: 'Sitagliptin + Metformin', brand: 'Janumet', manufacturer: 'MSD Pharmaceuticals',
@@ -203,7 +203,7 @@ function seed() {
       warnings: 'Prescription required. Not for type 1 diabetes. Regular monitoring advised.',
       side_effects: 'Upper respiratory tract infection, Stuffy nose, Headache. Consult doctor for persistent symptoms.',
       dosage_info: 'Strictly as prescribed by your physician.', 
-      image_url: null, stock: 150, threshold: 20
+      image_url: '/uploads/medicines/janumet_50_500.jpg', stock: 150, threshold: 20
     },
     {
       name: 'Glucobay 50', generic_name: 'Acarbose', brand: 'Glucobay', manufacturer: 'Bayer Pharmaceuticals',
@@ -216,7 +216,7 @@ function seed() {
       warnings: 'Prescription required. Inform doctor about intestinal disorders.',
       side_effects: 'Flatulence, Diarrhoea, Abdominal pain.',
       dosage_info: 'As prescribed by your physician.', 
-      image_url: null, stock: 180, threshold: 20
+      image_url: '/uploads/medicines/glucobay_50.jpg', stock: 180, threshold: 20
     },
 
     // Blood Pressure
@@ -231,7 +231,7 @@ function seed() {
       warnings: 'Prescription required. Do not stop abruptly. Regular BP monitoring required.',
       side_effects: 'Ankle swelling, Headache, Flushing. Report unusual symptoms to your doctor.',
       dosage_info: 'Strictly as prescribed by your physician.', 
-      image_url: null, stock: 400, threshold: 40
+      image_url: '/uploads/medicines/amlodac_5.jpg', stock: 400, threshold: 40
     },
     {
       name: 'Telmisartan 40', generic_name: 'Telmisartan', brand: 'Telma', manufacturer: 'Glenmark Pharma',
@@ -244,7 +244,7 @@ function seed() {
       warnings: 'Prescription required. Not for pregnant women. Monitor kidney function regularly.',
       side_effects: 'Dizziness, Back pain, Nasal congestion. Consult your doctor if symptoms persist.',
       dosage_info: 'As prescribed by your physician.', 
-      image_url: null, stock: 350, threshold: 35
+      image_url: '/uploads/medicines/telmisartan_40.jpg', stock: 350, threshold: 35
     },
 
     // Vitamins & Supplements
@@ -260,7 +260,7 @@ function seed() {
       warnings: 'Not a substitute for a balanced diet. Consult doctor before use during pregnancy.',
       side_effects: 'Generally well-tolerated. Urine discoloration (harmless). Rarely, mild stomach upset.',
       dosage_info: 'As directed by your physician or as mentioned on the label.', 
-      image_url: null, stock: 700, threshold: 80
+      image_url: '/uploads/medicines/becosules_capsule.jpg', stock: 700, threshold: 80
     },
     {
       name: 'Shelcal 500', generic_name: 'Calcium + Vitamin D3', brand: 'Shelcal', manufacturer: 'Torrent Pharma',
@@ -273,7 +273,7 @@ function seed() {
       warnings: 'Consult doctor if taking other calcium supplements. Not for patients with hypercalcemia.',
       side_effects: 'Constipation (uncommon), Bloating. Drink adequate water.',
       dosage_info: 'As directed by your physician.', 
-      image_url: null, stock: 550, threshold: 60
+      image_url: '/uploads/medicines/shelcal_500.jpg', stock: 550, threshold: 60
     },
     {
       name: 'Supradyn Daily', generic_name: 'Multivitamin + Minerals', brand: 'Supradyn', manufacturer: 'Bayer Consumer Health',
@@ -287,7 +287,7 @@ function seed() {
       warnings: 'Dietary supplement, not a medicine. Keep away from children.',
       side_effects: 'Generally well tolerated. Mild stomach discomfort in rare cases.',
       dosage_info: 'One tablet daily or as directed by your physician.', 
-      image_url: null, stock: 420, threshold: 50
+      image_url: '/uploads/medicines/supradyn_daily.jpg', stock: 420, threshold: 50
     },
 
     // Digestive Health
@@ -302,7 +302,7 @@ function seed() {
       warnings: 'Not for long-term use without medical advice. Inform doctor about liver conditions.',
       side_effects: 'Headache, Diarrhea, Nausea (uncommon). Consult doctor for prolonged use.',
       dosage_info: 'As directed by your physician.', 
-      image_url: null, stock: 500, threshold: 50
+      image_url: '/uploads/medicines/pan_40.jpg', stock: 500, threshold: 50
     },
     {
       name: 'Digene Gel', generic_name: 'Aluminium Hydroxide + Magnesium Hydroxide + Simethicone', brand: 'Digene', manufacturer: 'Abbott India',
@@ -315,7 +315,7 @@ function seed() {
       warnings: 'Not for prolonged use without medical advice.',
       side_effects: 'Constipation or diarrhea (uncommon).',
       dosage_info: 'As directed by your physician or as mentioned on the label.', 
-      image_url: null, stock: 200, threshold: 25
+      image_url: '/uploads/medicines/digene_gel.jpg', stock: 200, threshold: 25
     },
     {
       name: 'Econorm 250', generic_name: 'Saccharomyces Boulardii', brand: 'Econorm', manufacturer: 'Dr. Reddy\'s',
@@ -328,7 +328,7 @@ function seed() {
       warnings: 'Consult doctor if immunocompromised. Store properly to maintain probiotic viability.',
       side_effects: 'Generally well tolerated. Mild bloating initially in some individuals.',
       dosage_info: 'As directed by your physician.', 
-      image_url: null, stock: 300, threshold: 30
+      image_url: '/uploads/medicines/econorm_250.jpg', stock: 300, threshold: 30
     },
 
     // Skin Care
@@ -343,7 +343,7 @@ function seed() {
       warnings: 'For external use only. Avoid contact with eyes. Not for patients with iodine allergy.',
       side_effects: 'Local irritation (rare), Skin staining (temporary).',
       dosage_info: 'Apply as needed on affected area. For external use only.', 
-      image_url: null, stock: 250, threshold: 30
+      image_url: '/uploads/medicines/betadine_ointment.jpg', stock: 250, threshold: 30
     },
     {
       name: 'Candid Cream', generic_name: 'Clotrimazole', brand: 'Candid', manufacturer: 'Glenmark Pharma',
@@ -356,7 +356,7 @@ function seed() {
       warnings: 'For external use only. Discontinue if irritation occurs. Not for use in eyes.',
       side_effects: 'Local burning, Skin irritation (rare).',
       dosage_info: 'Apply to affected area as directed by your physician.', 
-      image_url: null, stock: 180, threshold: 20
+      image_url: '/uploads/medicines/candid_cream.jpg', stock: 180, threshold: 20
     },
 
     // First Aid
@@ -371,7 +371,7 @@ function seed() {
       warnings: 'For external use only. Replace if wet or soiled.',
       side_effects: 'Skin irritation from adhesive (rare).',
       dosage_info: 'Apply over cleaned wound. Replace as needed.', 
-      image_url: null, stock: 500, threshold: 50
+      image_url: '/uploads/medicines/band_aid_flexible_fabric.jpg', stock: 500, threshold: 50
     },
     {
       name: 'Dettol Antiseptic Liquid', generic_name: 'Chloroxylenol', brand: 'Dettol', manufacturer: 'Reckitt Benckiser',
@@ -384,7 +384,7 @@ function seed() {
       warnings: 'For external use only. Do not apply undiluted on wounds. Avoid contact with eyes.',
       side_effects: 'Skin irritation if used undiluted.',
       dosage_info: 'Dilute before use as per label instructions.', 
-      image_url: null, stock: 350, threshold: 40
+      image_url: '/uploads/medicines/dettol_antiseptic_liquid.jpg', stock: 350, threshold: 40
     },
 
     // Antibiotics
@@ -399,7 +399,7 @@ function seed() {
       warnings: 'Prescription required. Complete the full antibiotic course. Do not self-medicate with antibiotics.',
       side_effects: 'Diarrhea, Nausea, Vomiting, Skin rash (uncommon). Report allergic reactions immediately.',
       dosage_info: 'Strictly as prescribed by your physician. Complete the full course.', 
-      image_url: null, stock: 180, threshold: 20
+      image_url: '/uploads/medicines/augmentin_625_duo.jpg', stock: 180, threshold: 20
     },
     {
       name: 'Ciprofloxacin 500', generic_name: 'Ciprofloxacin', brand: 'Ciplox', manufacturer: 'Cipla Ltd',
@@ -412,7 +412,7 @@ function seed() {
       warnings: 'Prescription required. Avoid sunlight exposure. Not for children/adolescents without medical advice.',
       side_effects: 'Nausea, Diarrhea, Headache, Dizziness. Report tendon pain immediately.',
       dosage_info: 'Strictly as prescribed by your physician.', 
-      image_url: null, stock: 250, threshold: 25
+      image_url: '/uploads/medicines/ciprofloxacin_500.jpg', stock: 250, threshold: 25
     },
 
     // Eye & Ear Care
@@ -427,7 +427,7 @@ function seed() {
       warnings: 'For ophthalmic use only. Do not touch dropper tip. Remove contact lenses before use.',
       side_effects: 'Temporary blurred vision, Mild stinging (rare).',
       dosage_info: 'As directed by your physician.', 
-      image_url: null, stock: 150, threshold: 20
+      image_url: '/uploads/medicines/refresh_tears.jpg', stock: 150, threshold: 20
     },
 
     // Respiratory
@@ -442,7 +442,7 @@ function seed() {
       warnings: 'Prescription required. Learn proper inhaler technique. Do not exceed recommended dose.',
       side_effects: 'Tremor, Headache, Rapid heartbeat (at higher doses). Consult doctor if symptoms worsen.',
       dosage_info: 'Strictly as prescribed by your physician.', 
-      image_url: null, stock: 80, threshold: 10
+      image_url: '/uploads/medicines/asthalin_inhaler.jpg', stock: 80, threshold: 10
     },
 
     // Heart Care
@@ -457,7 +457,7 @@ function seed() {
       warnings: 'Prescription required. Not for patients with bleeding disorders or aspirin allergy. Not for children under 16.',
       side_effects: 'Stomach upset, Increased bleeding tendency. Report unusual bleeding or bruising.',
       dosage_info: 'Strictly as prescribed by your physician.', 
-      image_url: null, stock: 600, threshold: 60
+      image_url: '/uploads/medicines/ecosprin_75.jpg', stock: 600, threshold: 60
     },
     {
       name: 'Atorvastatin 10', generic_name: 'Atorvastatin', brand: 'Atorva', manufacturer: 'Zydus Healthcare',
@@ -470,7 +470,7 @@ function seed() {
       warnings: 'Prescription required. Inform doctor about liver conditions. Avoid grapefruit juice.',
       side_effects: 'Muscle pain (uncommon), Headache, Nausea. Report unexplained muscle pain immediately.',
       dosage_info: 'Strictly as prescribed by your physician.', 
-      image_url: null, stock: 400, threshold: 40
+      image_url: '/uploads/medicines/atorvastatin_10.jpg', stock: 400, threshold: 40
     },
 
     // Baby Care
@@ -485,7 +485,7 @@ function seed() {
       warnings: 'For infant use under adult supervision. Consult pediatrician before use.',
       side_effects: 'Generally well tolerated when used as directed.',
       dosage_info: 'As mentioned on the label or as directed by your pediatrician.', 
-      image_url: null, stock: 200, threshold: 25
+      image_url: '/uploads/medicines/gripe_water.jpg', stock: 200, threshold: 25
     },
 
     // Low stock items
@@ -500,7 +500,7 @@ function seed() {
       warnings: 'Prescription required. May cause drowsiness.',
       side_effects: 'Drowsiness, Headache, Dry mouth.',
       dosage_info: 'As prescribed by your physician.', 
-      image_url: null, stock: 8, threshold: 15
+      image_url: '/uploads/medicines/montair_lc.jpg', stock: 8, threshold: 15
     },
 
     // Out of stock item
@@ -515,7 +515,7 @@ function seed() {
       warnings: 'For external use only. Do not spray on broken skin or wounds. Highly inflammable.',
       side_effects: 'Skin irritation, Redness at application site (rare).',
       dosage_info: 'Spray on affected area as needed. For external use only.', 
-      image_url: null, stock: 0, threshold: 10
+      image_url: '/uploads/medicines/volini_spray.jpg', stock: 0, threshold: 10
     },
   ];
 

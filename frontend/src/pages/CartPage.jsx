@@ -74,7 +74,9 @@ export default function CartPage() {
             {cart.items.map(item => (
               <div key={item.id} className="cart-item" style={{ opacity: item.is_available ? 1 : 0.6 }}>
                 <div className="cart-item-image">
-                  {item.image_url ? <img src={`${BASE}${item.image_url}`} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : '💊'}
+                  {item.image_url ? (
+                    <img src={item.image_url.startsWith('http') ? item.image_url : `${BASE}${item.image_url}`} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : '💊'}
                 </div>
                 <div className="cart-item-info">
                   <Link to={`/medicines/${item.medicine_id}`} className="cart-item-name" style={{ textDecoration: 'none', display: 'block', color: 'var(--gray-800)' }}>
