@@ -505,3 +505,69 @@ exports.getAdminOrderById = (req, res) => {
     res.status(500).json({ error: 'Failed to fetch order details.' });
   }
 };
+
+// ─── Admin: list all pharmacies with stats ──────────────────────────────────
+exports.getPharmacies = (req, res) => {
+  try {
+    const db = getDb();
+    const pharmacies = db.prepare(`
+      SELECT p.*,
+        COUNT(DISTINCT o.id) as total_orders,
+        COALESCE(SUM(CASE WHEN o.order_status != 'cancelled' THEN o.total_amount ELSE 0 END), 0) as total_revenue,
+        COUNT(DISTINCT CASE WHEN o.order_status IN ('placed','confirmed','preparing','packed','shipped','out_for_delivery') THEN o.id END) as active_orders
+      FROM pharmacies p
+      LEFT JOIN orders o ON p.id = o.pharmacy_id
+      GROUP BY p.id
+      ORDER BY p.rating DESC
+    `).all();
+    res.json({ pharmacies });
+  } catch (err) {
+    console.error('Admin get pharmacies error:', err);
+    res.status(500).json({ error: 'Failed to fetch pharmacies.' });
+  }
+};
+
+// ─── Admin: toggle pharmacy active status ────────────────────────────────────
+exports.addPharmacy = (req, res) => {
+  try {
+    const {
+      name,
+      code,
+      address,
+      city,
+      state,
+      pincode,
+      phone,
+      email,
+      license_number,
+      operating_hours,
+    } = req.body;
+    if (!name || !code) return res.status(400).json({ error: 'Name and code are required.' });
+    const db = getDb();
+    const existing = db.prepare('SELECT id FROM pharmacies WHERE code = ?').get(code);
+    if (existing) return res.status(409).json({ error: 'Pharmacy with this code already exists.' });
+    const result = db.prepare(`
+      INSERT INTO pharmacies (
+        name, code, address, city, state, pincode, phone, email, license_number, operating_hours, is_active, created_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, datetime('now'))
+    `).run(
+      name,
+      code,
+      address || '',
+      city || '',
+      state || '',
+      pincode || '',
+      phone || '',
+      email || '',
+      license_number || '',
+      operating_hours || ''
+    );
+    const pharmacy = db.prepare('SELECT * FROM pharmacies WHERE id = ?').get(result.lastInsertRowid);
+    res.status(201).json({ message: 'Pharmacy added successfully.', pharmacy });
+  } catch (err) {
+    console.error('Add pharmacy error:', err);
+    res.status(500).json({ error: 'Failed to add pharmacy.' });
+  }
+};
+
+

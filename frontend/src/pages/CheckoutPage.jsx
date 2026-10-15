@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, Upload, CreditCard, CheckCircle, ArrowRight, Plus, FileText, AlertTriangle, Loader } from 'lucide-react';
+import { MapPin, Upload, CreditCard, CheckCircle, ArrowRight, Plus, FileText, AlertTriangle, Loader, Store } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { addressesAPI, prescriptionsAPI, ordersAPI, paymentsAPI } from '../services/api';
+import { addressesAPI, prescriptionsAPI, ordersAPI, paymentsAPI, pharmaciesAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
 const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
@@ -24,6 +24,9 @@ export default function CheckoutPage() {
   const [step, setStep] = useState(1);
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const [pharmacies, setPharmacies] = useState([]);
+  const [selectedPharmacy, setSelectedPharmacy] = useState(null);
+  const [showPharmacySelector, setShowPharmacySelector] = useState(false);
   const [prescriptions, setPrescriptions] = useState([]);
   const [selectedPrescription, setSelectedPrescription] = useState(null);
   const [order, setOrder] = useState(null);
@@ -40,8 +43,32 @@ export default function CheckoutPage() {
       if (def) setSelectedAddress(def.id);
       else if (r.data.addresses.length > 0) setSelectedAddress(r.data.addresses[0].id);
     }).catch(console.error);
+
     prescriptionsAPI.getAll().then(r => setPrescriptions(r.data.prescriptions)).catch(console.error);
+    pharmaciesAPI.getAll().then(r => setPharmacies(r.data.pharmacies || [])).catch(console.error);
   }, []);
+
+  // Auto-match nearest pharmacy when address or pharmacies change
+  useEffect(() => {
+    if (!selectedAddress || pharmacies.length === 0) return;
+    const addr = addresses.find(a => a.id === selectedAddress);
+    if (!addr) return;
+
+    // 1. Try exact pincode match
+    let match = pharmacies.find(p => p.pincode === addr.pincode);
+    // 2. Try city match
+    if (!match && addr.city) {
+      match = pharmacies.find(p => p.city.toLowerCase().includes(addr.city.toLowerCase()) || addr.city.toLowerCase().includes(p.city.toLowerCase()));
+    }
+    // 3. Fallback to first (highest rating)
+    if (!match) {
+      match = pharmacies[0];
+    }
+
+    if (match) {
+      setSelectedPharmacy(match.id);
+    }
+  }, [selectedAddress, addresses, pharmacies]);
 
   if (!cart || !user) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 400 }}>
@@ -73,6 +100,7 @@ export default function CheckoutPage() {
         address_id: selectedAddress,
         prescription_id: selectedPrescription || null,
         payment_method: paymentMethod,
+        pharmacy_id: selectedPharmacy || null,
       });
       setOrder(data.order);
       setStep(5);
@@ -220,6 +248,73 @@ export default function CheckoutPage() {
                     </div>
                   </div>
                 ))}
+
+                {/* Fulfilling Pharmacy Partner Info */}
+                {selectedAddress && (() => {
+                  const currPharm = pharmacies.find(p => p.id === selectedPharmacy);
+                  if (!currPharm) return null;
+                  return (
+                    <div style={{ padding: '18px 24px', background: '#f8fafc', borderTop: '2px solid var(--gray-100)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10, flexWrap: 'wrap', gap: 8 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <Store size={18} style={{ color: 'var(--accent-600)' }} />
+                          <span style={{ fontWeight: 700, fontSize: 14, color: 'var(--gray-900)' }}>Assigned Pharmacy Partner</span>
+                          <span className="badge badge-success" style={{ fontSize: 11 }}>Nearest Match</span>
+                        </div>
+                        <button
+                          type="button"
+                          className="btn btn-ghost btn-sm"
+                          style={{ fontSize: 12, padding: '4px 10px' }}
+                          onClick={() => setShowPharmacySelector(!showPharmacySelector)}
+                        >
+                          {showPharmacySelector ? 'Hide List' : 'Change Pharmacy Partner'}
+                        </button>
+                      </div>
+
+                      <div style={{ background: 'white', border: '1px solid var(--gray-200)', borderRadius: 10, padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+                        <div>
+                          <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--gray-900)' }}>{currPharm.name}</div>
+                          <div style={{ fontSize: 12, color: 'var(--gray-500)', marginTop: 2 }}>{currPharm.address}, {currPharm.city} — {currPharm.pincode}</div>
+                          <div style={{ fontSize: 12, color: 'var(--accent-600)', marginTop: 3, fontWeight: 600 }}>📞 {currPharm.phone}</div>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <span style={{ background: '#fef3c7', color: '#b45309', padding: '4px 10px', borderRadius: 20, fontSize: 12, fontWeight: 700 }}>
+                            ⭐ {currPharm.rating}
+                          </span>
+                          <div style={{ fontSize: 11, color: 'var(--gray-400)', marginTop: 4 }}>Verified Partner</div>
+                        </div>
+                      </div>
+
+                      {showPharmacySelector && (
+                        <div style={{ marginTop: 12, background: 'white', border: '1px solid var(--gray-200)', borderRadius: 10, padding: 12, maxHeight: 220, overflowY: 'auto' }}>
+                          <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--gray-500)', marginBottom: 8, textTransform: 'uppercase' }}>Select Your Preferred Local Pharmacy:</div>
+                          {pharmacies.map(p => (
+                            <div
+                              key={p.id}
+                              onClick={() => setSelectedPharmacy(p.id)}
+                              style={{
+                                padding: '10px 12px', borderRadius: 8, cursor: 'pointer', marginBottom: 6,
+                                background: selectedPharmacy === p.id ? 'var(--accent-50)' : '#fcfcfc',
+                                border: `1px solid ${selectedPharmacy === p.id ? 'var(--accent-500)' : 'var(--gray-200)'}`,
+                                display: 'flex', justifyContent: 'space-between', alignItems: 'center'
+                              }}
+                            >
+                              <div>
+                                <div style={{ fontSize: 13, fontWeight: 700, color: selectedPharmacy === p.id ? 'var(--accent-800)' : 'var(--gray-800)' }}>
+                                  {p.name}
+                                </div>
+                                <div style={{ fontSize: 11, color: 'var(--gray-500)' }}>
+                                  {p.city} ({p.pincode}) · 📞 {p.phone}
+                                </div>
+                              </div>
+                              <span style={{ fontSize: 12, fontWeight: 700, color: '#d97706' }}>⭐ {p.rating}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
               </div>
               <div className="card-footer" style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <button className="btn btn-ghost" onClick={() => setStep(1)}>← Back</button>
@@ -311,6 +406,21 @@ export default function CheckoutPage() {
                   <span>Total</span>
                   <span style={{ color: 'var(--accent-700)' }}>₹{cart.total?.toFixed(2)}</span>
                 </div>
+
+                {(() => {
+                  const currPharm = pharmacies.find(p => p.id === selectedPharmacy);
+                  if (!currPharm) return null;
+                  return (
+                    <div style={{ marginTop: 14, paddingTop: 12, borderTop: '1px dashed var(--gray-200)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 13 }}>
+                      <span style={{ color: 'var(--gray-600)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <Store size={15} style={{ color: 'var(--accent-600)' }} /> Fulfilling Partner:
+                      </span>
+                      <span style={{ fontWeight: 700, color: 'var(--gray-900)' }}>
+                        {currPharm.name} ({currPharm.city}) <span style={{ color: '#d97706' }}>⭐ {currPharm.rating}</span>
+                      </span>
+                    </div>
+                  );
+                })()}
               </div>
             </div>
 

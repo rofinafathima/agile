@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { ShoppingCart, User, LogOut, Home, Pill, Grid3X3, FileText, Package, ChevronDown, Shield } from 'lucide-react';
+import { ShoppingCart, User, LogOut, Home, Pill, Grid3X3, FileText, Package, ChevronDown, Shield, Store } from 'lucide-react';
 import SearchBar from './SearchBar';
 
 export default function Navbar() {
@@ -43,16 +43,16 @@ export default function Navbar() {
             <span className="hide-sm">Medicines</span>
           </Link>
 
-          <Link to="/categories" className={`nav-link ${isActive('/categories') ? 'active' : ''}`}>
-            <Grid3X3 size={16} />
-            <span className="hide-sm">Categories</span>
+          <Link to="/pharmacies" className={`nav-link ${isActive('/pharmacies') ? 'active' : ''}`}>
+            <Store size={16} />
+            <span className="hide-sm">Pharmacies</span>
           </Link>
 
           {user ? (
             <>
               <Link to="/upload-prescription" className={`nav-link ${isActive('/upload-prescription') ? 'active' : ''}`}>
                 <FileText size={16} />
-                <span className="hide-sm">Rx Upload</span>
+                <span className="hide-sm">Prescription</span>
               </Link>
 
               <Link to="/orders" className={`nav-link ${isActive('/orders') ? 'active' : ''}`}>
@@ -83,7 +83,7 @@ export default function Navbar() {
                 >
                   <User size={16} />
                   <span className="hide-sm" style={{ maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {user.name.split(' ')[0]}
+                    {(user.name || 'User').split(' ')[0]}
                   </span>
                   <ChevronDown size={14} />
                 </button>
@@ -93,8 +93,8 @@ export default function Navbar() {
                     <div style={{ position: 'fixed', inset: 0, zIndex: 150 }} onClick={() => setShowDropdown(false)} />
                     <div className="search-dropdown" style={{ width: 200, zIndex: 200 }}>
                       <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--gray-100)' }}>
-                        <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--gray-800)' }}>{user.name}</div>
-                        <div style={{ fontSize: 12, color: 'var(--gray-400)' }}>{user.email}</div>
+                        <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--gray-800)' }}>{user.name || 'User'}</div>
+                        <div style={{ fontSize: 12, color: 'var(--gray-400)' }}>{user.email || ''}</div>
                       </div>
                       {[
                         { to: '/profile', label: '👤 My Profile' },
@@ -126,6 +126,9 @@ export default function Navbar() {
             </>
           ) : (
             <>
+              <Link to="/pharmacy/login" className="nav-link hide-sm" style={{ color: 'var(--accent-600)', fontSize: 13, fontWeight: 600 }}>
+                🏪 Pharmacy Portal
+              </Link>
               <Link to="/login" className="nav-link">Login</Link>
               <Link to="/signup" className="btn btn-primary btn-sm">Sign Up</Link>
             </>

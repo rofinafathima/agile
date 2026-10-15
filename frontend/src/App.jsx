@@ -14,6 +14,7 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import MedicinesPage from './pages/MedicinesPage';
 import MedicineDetailPage from './pages/MedicineDetailPage';
+import PharmaciesPage from './pages/PharmaciesPage';
 
 // Protected User Pages
 import CartPage from './pages/CartPage';
@@ -26,6 +27,14 @@ import PrescriptionPage from './pages/PrescriptionPage';
 // Admin Pages
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminPharmaciesPage from './pages/admin/AdminPharmaciesPage';
+
+// Pharmacy Portal Pages
+import PharmacyLoginPage from './pages/pharmacy/PharmacyLoginPage';
+import PharmacyLayout from './pages/pharmacy/PharmacyLayout';
+import PharmacyDashboard from './pages/pharmacy/PharmacyDashboard';
+import PharmacyOrdersPage from './pages/pharmacy/PharmacyOrdersPage';
+import PharmacyOrderDetail from './pages/pharmacy/PharmacyOrderDetail';
 
 // Route Guards
 const ProtectedRoute = ({ children }) => {
@@ -52,6 +61,7 @@ function AppContent() {
           <Route path="/" element={<HomePage />} />
           <Route path="/medicines" element={<MedicinesPage />} />
           <Route path="/categories" element={<MedicinesPage />} />
+          <Route path="/pharmacies" element={<PharmaciesPage />} />
           <Route path="/medicines/:id" element={<MedicineDetailPage />} />
           
           {/* Protected Routes */}
@@ -70,7 +80,16 @@ function AppContent() {
         {/* Admin Routes (Custom Layout) */}
         <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
           <Route index element={<AdminDashboard />} />
+          <Route path="pharmacies" element={<AdminPharmaciesPage />} />
           {/* Add more admin routes here as needed for future expansion */}
+        </Route>
+
+        {/* Pharmacy Portal Routes (Own auth via localStorage) */}
+        <Route path="/pharmacy/login" element={<PharmacyLoginPage />} />
+        <Route path="/pharmacy" element={<PharmacyLayout />}>
+          <Route path="dashboard" element={<PharmacyDashboard />} />
+          <Route path="orders" element={<PharmacyOrdersPage />} />
+          <Route path="orders/:id" element={<PharmacyOrderDetail />} />
         </Route>
       </Routes>
     </>

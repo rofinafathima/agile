@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { CheckCircle, Circle, Clock, MapPin, Package, CreditCard, RotateCcw } from 'lucide-react';
+import { CheckCircle, Circle, Clock, MapPin, Package, CreditCard, RotateCcw, Store } from 'lucide-react';
 import { ordersAPI } from '../services/api';
 import toast from 'react-hot-toast';
 
@@ -201,6 +201,26 @@ export default function OrderDetailPage() {
                     {order.delivery_address.address_line2 && <>{order.delivery_address.address_line2}<br /></>}
                     {order.delivery_address.city}, {order.delivery_address.state} — {order.delivery_address.pincode}<br />
                     📱 {order.delivery_address.phone}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Assigned Pharmacy Partner */}
+            {order.pharmacy && (
+              <div className="card" style={{ borderLeft: '3px solid var(--accent-600)' }}>
+                <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span className="card-title"><Store size={16} style={{ marginRight: 8, color: 'var(--accent-600)' }} />Fulfilling Pharmacy</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#f59e0b', background: '#fef3c7', padding: '2px 8px', borderRadius: 12 }}>
+                    ⭐ {order.pharmacy.rating}
+                  </span>
+                </div>
+                <div className="card-body">
+                  <div style={{ fontSize: 14, color: 'var(--gray-700)', lineHeight: 1.6 }}>
+                    <strong style={{ color: 'var(--gray-900)' }}>{order.pharmacy.name}</strong><br />
+                    <span style={{ color: 'var(--gray-500)', fontSize: 13 }}>{order.pharmacy.address}, {order.pharmacy.city}</span><br />
+                    <span style={{ color: 'var(--gray-500)', fontSize: 12 }}>Pincode: {order.pharmacy.pincode}</span><br />
+                    <span style={{ color: 'var(--accent-600)', fontSize: 13, fontWeight: 600 }}>📞 {order.pharmacy.phone}</span>
                   </div>
                 </div>
               </div>

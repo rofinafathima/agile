@@ -24,7 +24,7 @@ function initializeTables() {
       phone TEXT NOT NULL,
       password_hash TEXT NOT NULL,
       date_of_birth TEXT,
-      role TEXT DEFAULT 'customer' CHECK(role IN ('customer', 'admin')),
+      role TEXT DEFAULT 'customer' CHECK(role IN ('customer', 'admin', 'pharmacy')),
       avatar_url TEXT,
       is_active INTEGER DEFAULT 1,
       created_at TEXT DEFAULT (datetime('now')),
@@ -155,10 +155,31 @@ function initializeTables() {
       UNIQUE(cart_id, medicine_id)
     );
 
+    CREATE TABLE IF NOT EXISTS pharmacies (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      code TEXT UNIQUE NOT NULL,
+      phone TEXT NOT NULL,
+      email TEXT NOT NULL,
+      address TEXT NOT NULL,
+      city TEXT NOT NULL,
+      state TEXT NOT NULL,
+      pincode TEXT NOT NULL,
+      license_number TEXT,
+      rating REAL DEFAULT 4.8,
+      is_active INTEGER DEFAULT 1,
+      user_id INTEGER,
+      image_url TEXT,
+      created_at TEXT DEFAULT (datetime('now')),
+      updated_at TEXT DEFAULT (datetime('now')),
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    );
+
     CREATE TABLE IF NOT EXISTS orders (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       order_number TEXT UNIQUE NOT NULL,
       user_id INTEGER NOT NULL,
+      pharmacy_id INTEGER,
       address_id INTEGER,
       prescription_id INTEGER,
       subtotal REAL NOT NULL,
@@ -174,6 +195,7 @@ function initializeTables() {
       created_at TEXT DEFAULT (datetime('now')),
       updated_at TEXT DEFAULT (datetime('now')),
       FOREIGN KEY (user_id) REFERENCES users(id),
+      FOREIGN KEY (pharmacy_id) REFERENCES pharmacies(id),
       FOREIGN KEY (address_id) REFERENCES addresses(id),
       FOREIGN KEY (prescription_id) REFERENCES prescriptions(id)
     );
@@ -257,7 +279,48 @@ function initializeTables() {
     CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id);
     CREATE INDEX IF NOT EXISTS idx_order_items_order ON order_items(order_id);
     CREATE INDEX IF NOT EXISTS idx_payments_order ON payments(order_id);
+    CREATE INDEX IF NOT EXISTS idx_pharmacies_pincode ON pharmacies(pincode);
   `);
+
+  // Safe migrations for existing DB (run outside the main exec block)
+  const safeMigrations = [
+    `ALTER TABLE orders ADD COLUMN pharmacy_id INTEGER REFERENCES pharmacies(id);`,
+  ];
+  for (const sql of safeMigrations) {
+    try { db.exec(sql); } catch (e) { /* column already exists */ }
+  }
+  // Create pharmacy index separately (safe)
+  try { db.exec(`CREATE INDEX IF NOT EXISTS idx_orders_pharmacy ON orders(pharmacy_id);`); } catch (e) {}
+
+  // Migrate users role CHECK constraint to include 'pharmacy'
+  // SQLite doesn't support ALTER COLUMN, so we rebuild the table if needed
+  try {
+    const tableInfo = db.prepare(`SELECT sql FROM sqlite_master WHERE type='table' AND name='users'`).get();
+    if (tableInfo && !tableInfo.sql.includes("'pharmacy'")) {
+      db.exec(`
+        PRAGMA foreign_keys = OFF;
+        CREATE TABLE IF NOT EXISTS users_new (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          email TEXT UNIQUE NOT NULL,
+          phone TEXT NOT NULL,
+          password_hash TEXT NOT NULL,
+          date_of_birth TEXT,
+          role TEXT DEFAULT 'customer' CHECK(role IN ('customer', 'admin', 'pharmacy')),
+          avatar_url TEXT,
+          is_active INTEGER DEFAULT 1,
+          created_at TEXT DEFAULT (datetime('now')),
+          updated_at TEXT DEFAULT (datetime('now'))
+        );
+        INSERT INTO users_new SELECT * FROM users;
+        DROP TABLE users;
+        ALTER TABLE users_new RENAME TO users;
+        PRAGMA foreign_keys = ON;
+      `);
+    }
+  } catch (e) {
+    console.warn('Role migration warning (non-fatal):', e.message);
+  }
 }
 
 module.exports = { getDb };

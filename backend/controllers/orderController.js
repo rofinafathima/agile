@@ -3,7 +3,7 @@ const { generateOrderNumber, calculateDeliveryDate } = require('../utils/helpers
 
 exports.createOrder = (req, res) => {
   try {
-    const { address_id, prescription_id, payment_method } = req.body;
+    const { address_id, prescription_id, payment_method, pharmacy_id } = req.body;
     const db = getDb();
 
     // Get cart items
@@ -101,14 +101,31 @@ exports.createOrder = (req, res) => {
 
     const initialStatus = hasPrescriptionItems ? 'prescription_verification' : 'placed';
 
+    // Select or auto-assign nearest active pharmacy
+    let pharmacy = null;
+    if (pharmacy_id) {
+      pharmacy = db.prepare('SELECT id, name, code, phone, email, address, city, state, pincode, rating FROM pharmacies WHERE id = ? AND is_active = 1').get(pharmacy_id);
+    }
+    if (!pharmacy) {
+      // Auto-assign nearest / top-rated active pharmacy based on pincode or city
+      pharmacy = db.prepare('SELECT id, name, code, phone, email, address, city, state, pincode, rating FROM pharmacies WHERE is_active = 1 AND pincode = ? ORDER BY rating DESC LIMIT 1').get(address.pincode);
+      if (!pharmacy && address.city) {
+        pharmacy = db.prepare('SELECT id, name, code, phone, email, address, city, state, pincode, rating FROM pharmacies WHERE is_active = 1 AND city LIKE ? ORDER BY rating DESC LIMIT 1').get(`%${address.city}%`);
+      }
+      if (!pharmacy) {
+        pharmacy = db.prepare('SELECT id, name, code, phone, email, address, city, state, pincode, rating FROM pharmacies WHERE is_active = 1 ORDER BY rating DESC LIMIT 1').get();
+      }
+    }
+    const assignedPharmacyId = pharmacy ? pharmacy.id : null;
+
     // Create order in transaction
     const createOrderTx = db.transaction(() => {
       const orderResult = db.prepare(`
-        INSERT INTO orders (order_number, user_id, address_id, prescription_id, subtotal, discount_amount,
+        INSERT INTO orders (order_number, user_id, pharmacy_id, address_id, prescription_id, subtotal, discount_amount,
                            delivery_fee, tax, total_amount, payment_status, order_status, expected_delivery,
                            delivery_address_snapshot)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?)
-      `).run(orderNumber, req.user.id, address_id, prescription_id || null,
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?)
+      `).run(orderNumber, req.user.id, assignedPharmacyId, address_id, prescription_id || null,
         parseFloat(subtotal.toFixed(2)), parseFloat(totalDiscount.toFixed(2)),
         deliveryFee, tax, total, initialStatus, expectedDelivery, addressSnapshot);
 
@@ -126,10 +143,11 @@ exports.createOrder = (req, res) => {
       }
 
       // Add status history
+      const historyDesc = pharmacy ? `Order placed & assigned to ${pharmacy.name}` : 'Order placed successfully';
       db.prepare(`
         INSERT INTO order_status_history (order_id, status, description, updated_by)
         VALUES (?, ?, ?, ?)
-      `).run(orderId, initialStatus, 'Order placed successfully', req.user.id);
+      `).run(orderId, initialStatus, historyDesc, req.user.id);
 
       // Create payment record
       db.prepare(`
@@ -173,6 +191,7 @@ exports.createOrder = (req, res) => {
         ...order,
         items: orderItemsData,
         expected_delivery: expectedDelivery,
+        pharmacy,
       },
     });
   } catch (err) {
@@ -189,7 +208,11 @@ exports.getOrders = (req, res) => {
 
     const total = db.prepare('SELECT COUNT(*) as count FROM orders WHERE user_id = ?').get(req.user.id).count;
     const orders = db.prepare(`
-      SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?
+      SELECT o.*, p.name as pharmacy_name, p.city as pharmacy_city, p.phone as pharmacy_phone, p.rating as pharmacy_rating
+      FROM orders o
+      LEFT JOIN pharmacies p ON o.pharmacy_id = p.id
+      WHERE o.user_id = ?
+      ORDER BY o.created_at DESC LIMIT ? OFFSET ?
     `).all(req.user.id, parseInt(limit), offset);
 
     // Get items for each order
@@ -225,6 +248,11 @@ exports.getOrderById = (req, res) => {
       prescription = db.prepare('SELECT * FROM prescriptions WHERE id = ?').get(order.prescription_id);
     }
 
+    let pharmacy = null;
+    if (order.pharmacy_id) {
+      pharmacy = db.prepare('SELECT id, name, code, phone, email, address, city, state, pincode, rating FROM pharmacies WHERE id = ?').get(order.pharmacy_id);
+    }
+
     res.json({
       order: {
         ...order,
@@ -232,6 +260,7 @@ exports.getOrderById = (req, res) => {
         statusHistory,
         payment,
         prescription,
+        pharmacy,
         delivery_address: order.delivery_address_snapshot ? JSON.parse(order.delivery_address_snapshot) : null,
       },
     });

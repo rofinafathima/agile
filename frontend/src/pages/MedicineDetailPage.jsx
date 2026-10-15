@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { 
-  ShoppingCart, AlertTriangle, CheckCircle, Package, Info, ChevronRight, 
-  Minus, Plus, Star, ShieldAlert, Clock, Pill, Thermometer, 
-  Stethoscope, AlertCircle, FileText, Check 
+import {
+  ShoppingCart, AlertTriangle, CheckCircle, Package, Info, ChevronRight,
+  Minus, Plus, Star, ShieldAlert, Clock, Pill, Thermometer,
+  Stethoscope, AlertCircle, FileText, Check
 } from 'lucide-react';
 import { medicinesAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -14,8 +14,8 @@ const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://lo
 
 function StockBadge({ stock, threshold }) {
   if (stock <= 0) return <span className="badge badge-danger" style={{ fontSize: 13, padding: '6px 14px' }}>🔴 Out of Stock</span>;
-  if (stock <= threshold) return <span className="badge badge-warning" style={{ fontSize: 13, padding: '6px 14px' }}>🟡 Low Stock — Only {stock} left</span>;
-  return <span className="badge badge-success" style={{ fontSize: 13, padding: '6px 14px' }}>🟢 In Stock — {stock} units available</span>;
+  if (stock <= threshold) return <span className="badge badge-warning" style={{ fontSize: 13, padding: '6px 14px' }}>🟡 Low Stock</span>;
+  return <span className="badge badge-success" style={{ fontSize: 13, padding: '6px 14px' }}>🟢 In Stock</span>;
 }
 
 export default function MedicineDetailPage() {
@@ -144,7 +144,7 @@ export default function MedicineDetailPage() {
               <p style={{ fontSize: 13, color: '#475569', lineHeight: 1.5, marginBottom: 14 }}>
                 {medicine.composition || 'Standard pharmaceutical grade formulation'}
               </p>
-              
+
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, fontWeight: 700, fontSize: 14, color: '#334155' }}>
                 <Thermometer size={16} style={{ color: '#0284c7' }} /> Storage Instructions
               </div>
@@ -174,7 +174,7 @@ export default function MedicineDetailPage() {
 
             {/* Stock */}
             <div style={{ marginBottom: 16 }}>
-              <StockBadge stock={medicine.stock_quantity} threshold={medicine.low_stock_threshold || 10} />
+              <StockBadge stock={medicine.stock_quantity} />
             </div>
 
             {/* Price Card */}
@@ -269,8 +269,8 @@ export default function MedicineDetailPage() {
               >
                 {!adding && <><ShoppingCart size={18} /> {medicine.stock_quantity <= 0 ? 'Out of Stock' : 'Add to Cart'}</>}
               </button>
-              <button 
-                className="btn btn-secondary btn-lg" 
+              <button
+                className="btn btn-secondary btn-lg"
                 style={{ flexShrink: 0 }}
                 onClick={async () => {
                   await handleAddToCart();

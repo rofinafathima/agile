@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Pill, Package, FileText, Users, CreditCard, LogOut, Tags } from 'lucide-react';
+import { LayoutDashboard, LogOut, Store } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export default function AdminLayout() {
@@ -14,17 +14,11 @@ export default function AdminLayout() {
   };
 
   const navItems = [
-    { section: 'Overview' },
-    { path: '/admin', icon: LayoutDashboard, label: 'Dashboard' },
-    { section: 'Management' },
-    { path: '/admin/medicines', icon: Pill, label: 'Medicines' },
-    { path: '/admin/categories', icon: Tags, label: 'Categories' },
-    { path: '/admin/orders', icon: Package, label: 'Orders' },
-    { path: '/admin/prescriptions', icon: FileText, label: 'Prescriptions' },
-    { path: '/admin/users', icon: Users, label: 'Users' },
-    { section: 'Financials' },
-    { path: '/admin/payments', icon: CreditCard, label: 'Payments' },
-  ];
+  { section: 'Overview' },
+  { path: '/admin', icon: LayoutDashboard, label: 'Dashboard' },
+  { section: 'Management' },
+  { path: '/admin/pharmacies', icon: Store, label: 'Pharmacies' },
+];
 
   return (
     <div className="admin-layout">

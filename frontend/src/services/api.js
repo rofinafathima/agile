@@ -9,9 +9,20 @@ const api = axios.create({
 
 // Request interceptor - attach token
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  // If headers already has Authorization, keep it
+  if (!config.headers.Authorization) {
+    // If request is for pharmacy portal, prefer pharmacy_token
+    if (config.url?.includes('/pharmacies/portal')) {
+      const pharmacyToken = localStorage.getItem('pharmacy_token');
+      if (pharmacyToken) {
+        config.headers.Authorization = `Bearer ${pharmacyToken}`;
+      }
+    } else {
+      const token = localStorage.getItem('token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    }
   }
   return config;
 });
@@ -21,11 +32,20 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Only clear if not on login page
-      if (!window.location.pathname.includes('/login') && !window.location.pathname.includes('/signup')) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        window.location.href = '/login';
+      const path = window.location.pathname;
+      if (path.startsWith('/pharmacy')) {
+        if (!path.includes('/login')) {
+          localStorage.removeItem('pharmacy_token');
+          localStorage.removeItem('pharmacy_user');
+          window.location.href = '/pharmacy/login';
+        }
+      } else {
+        // Customer / Admin flow
+        if (!path.includes('/login') && !path.includes('/signup')) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          window.location.href = '/login';
+        }
       }
     }
     return Promise.reject(error);
@@ -139,6 +159,22 @@ export const adminAPI = {
   // Categories
   addCategory: (data) => api.post('/admin/categories', data),
   updateCategory: (id, data) => api.put(`/admin/categories/${id}`, data),
+};
+
+// Pharmacies (public listing)
+export const pharmaciesAPI = {
+  getAll: (params) => api.get('/pharmacies', { params }),
+};
+
+// Pharmacy Portal (pharmacy staff login)
+export const pharmacyPortalAPI = {
+  getMe: () => api.get('/pharmacies/portal/me'),
+  getDashboard: () => api.get('/pharmacies/portal/dashboard'),
+  getOrders: (params) => api.get('/pharmacies/portal/orders', { params }),
+  getOrderById: (id) => api.get(`/pharmacies/portal/orders/${id}`),
+  updateOrderStatus: (id, data) => api.put(`/pharmacies/portal/orders/${id}/status`, data),
+  assignPharmacy: (data) => api.post('/pharmacies/assign', data),
+  autoAssign: (data) => api.post('/pharmacies/auto-assign', data),
 };
 
 export default api;

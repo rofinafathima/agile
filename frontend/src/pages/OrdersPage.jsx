@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Package, ChevronRight, RotateCcw, X, Eye } from 'lucide-react';
+import { Package, ChevronRight, RotateCcw, X, Eye, Store } from 'lucide-react';
 import { ordersAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
@@ -99,7 +99,12 @@ export default function OrdersPage() {
                       </div>
                       <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--gray-800)' }}>Order #{order.order_number}</div>
                     </div>
-                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+                      {order.pharmacy_name && (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'rgba(2, 132, 199, 0.08)', color: 'var(--accent-700)', border: '1px solid rgba(2, 132, 199, 0.2)', padding: '3px 10px', borderRadius: 14, fontSize: 12, fontWeight: 600 }}>
+                          <Store size={13} /> {order.pharmacy_name} {order.pharmacy_city ? `· ${order.pharmacy_city}` : ''}
+                        </span>
+                      )}
                       <span className={`badge ${statusInfo.color}`}>{statusInfo.label}</span>
                       <span className={`badge ${payInfo.color}`}>💳 {payInfo.label}</span>
                     </div>

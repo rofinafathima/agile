@@ -87,7 +87,7 @@ export default function CartPage() {
                     {item.prescription_required && <span style={{ marginLeft: 6, color: 'var(--warning)', fontSize: 11, fontWeight: 600 }}>Rx</span>}
                   </div>
                   {!item.is_available && <div style={{ fontSize: 12, color: 'var(--danger)', fontWeight: 600 }}>⚠️ Unavailable</div>}
-                  {item.is_available && !item.in_stock && <div style={{ fontSize: 12, color: 'var(--danger)', fontWeight: 600 }}>⚠️ Insufficient stock ({item.stock_quantity} available)</div>}
+                  {item.is_available && !item.in_stock && <div style={{ fontSize: 12, color: 'var(--danger)', fontWeight: 600 }}>⚠️ Insufficient stock</div>}
                   <div style={{ marginTop: 8, fontSize: 12, color: 'var(--gray-400)' }}>
                     ₹{item.calculated_unit_price?.toFixed(2)} × {item.quantity} = <strong style={{ color: 'var(--gray-800)' }}>₹{item.item_total?.toFixed(2)}</strong>
                     {item.discount > 0 && <span style={{ marginLeft: 8, color: 'var(--success)', fontSize: 11 }}>({item.discount}% off)</span>}

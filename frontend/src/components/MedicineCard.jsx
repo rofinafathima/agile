@@ -9,8 +9,8 @@ const MEDICINE_BASE = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http
 
 function getStockInfo(stock, threshold) {
   if (stock <= 0) return { label: 'Out of Stock', cls: 'stock-out', dot: '🔴' };
-  if (stock <= threshold) return { label: `Only ${stock} left`, cls: 'stock-low', dot: '🟡' };
-  return { label: `In Stock (${stock} units)`, cls: 'stock-in', dot: '🟢' };
+  if (stock <= threshold) return { label: 'Low Stock', cls: 'stock-low', dot: '🟡' };
+  return { label: 'In Stock', cls: 'stock-in', dot: '🟢' };
 }
 
 export default function MedicineCard({ medicine }) {

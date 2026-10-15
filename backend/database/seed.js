@@ -22,22 +22,80 @@ function seed() {
     DELETE FROM inventory;
     DELETE FROM medicines;
     DELETE FROM categories;
+    DELETE FROM pharmacies;
     DELETE FROM users;
+    DELETE FROM sqlite_sequence;
   `);
 
-  // Seed admin user
+  // Seed admin & pharmacy users
   const adminHash = bcrypt.hashSync('Admin@123456', 12);
   const userHash = bcrypt.hashSync('User@123456', 12);
+  const pharmacyHash = bcrypt.hashSync('Pharmacy@123', 12);
 
   const insertUser = db.prepare(`
     INSERT INTO users (name, email, phone, password_hash, date_of_birth, role) VALUES (?, ?, ?, ?, ?, ?)
   `);
 
-  insertUser.run('Admin User', 'admin@epharmacy.com', '9876543210', adminHash, '1990-01-15', 'admin');
+  const adminRes = insertUser.run('Admin User', 'admin@epharmacy.com', '9876543210', adminHash, '1990-01-15', 'admin');
   insertUser.run('Demo Customer', 'user@epharmacy.com', '9876543211', userHash, '1995-06-20', 'customer');
   insertUser.run('Rahul Sharma', 'rahul@example.com', '9876543212', userHash, '1992-03-10', 'customer');
 
+  const u1 = insertUser.run('Apollo MG Road Staff', 'apollo.mg@pharmacy.com', '9876543301', pharmacyHash, null, 'pharmacy');
+  const u2 = insertUser.run('MedPlus Indiranagar Staff', 'medplus.ind@pharmacy.com', '9876543302', pharmacyHash, null, 'pharmacy');
+  const u3 = insertUser.run('Wellness Koramangala Staff', 'wellness.kor@pharmacy.com', '9876543303', pharmacyHash, null, 'pharmacy');
+  const u4 = insertUser.run('Care Chemists Whitefield Staff', 'care.whi@pharmacy.com', '9876543304', pharmacyHash, null, 'pharmacy');
+  const u5 = insertUser.run('GreenCross HSR Staff', 'greencross.hsr@pharmacy.com', '9876543305', pharmacyHash, null, 'pharmacy');
+  const u6 = insertUser.run('Trust Chemist Jayanagar Staff', 'trust.jayanagar@pharmacy.com', '9876543306', pharmacyHash, null, 'pharmacy');
+  const u7 = insertUser.run('Apollo Fort Mumbai Staff', 'apollo.mumbai@pharmacy.com', '9876543307', pharmacyHash, null, 'pharmacy');
+  const u8 = insertUser.run('Wellness Bandra Staff', 'wellness.bandra@pharmacy.com', '9876543308', pharmacyHash, null, 'pharmacy');
+  const u9 = insertUser.run('Noble Plus Andheri Staff', 'noble.andheri@pharmacy.com', '9876543309', pharmacyHash, null, 'pharmacy');
+  const u10 = insertUser.run('Metro Meds Delhi Staff', 'metro.delhi@pharmacy.com', '9876543310', pharmacyHash, null, 'pharmacy');
+  const u11 = insertUser.run('Guardian South Ext Staff', 'guardian.delhi@pharmacy.com', '9876543311', pharmacyHash, null, 'pharmacy');
+  const u12 = insertUser.run('Apollo Noida Staff', 'apollo.noida@pharmacy.com', '9876543312', pharmacyHash, null, 'pharmacy');
+  const u13 = insertUser.run('MedPlus Banjara Hills Staff', 'medplus.hyd@pharmacy.com', '9876543313', pharmacyHash, null, 'pharmacy');
+  const u14 = insertUser.run('Apollo Hitec City Staff', 'apollo.hyd@pharmacy.com', '9876543314', pharmacyHash, null, 'pharmacy');
+  const u15 = insertUser.run('Apollo T Nagar Staff', 'apollo.chennai@pharmacy.com', '9876543315', pharmacyHash, null, 'pharmacy');
+
   console.log('✅ Users seeded');
+
+  // Seed Pharmacies
+  const insertPharmacy = db.prepare(`
+    INSERT INTO pharmacies (name, code, phone, email, address, city, state, pincode, license_number, rating, user_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `);
+
+  const pharmaciesList = [
+    // Bangalore
+    ['Apollo Pharmacy - MG Road', 'APOLLO-BLR-01', '+91 80 2558 1001', 'apollo.mg@epharmacy.com', '124 MG Road, Opposite Metro Station', 'Bangalore', 'Karnataka', '560001', 'KA-BLR-2024-PH-1092', 4.9, u1.lastInsertRowid],
+    ['MedPlus Pharmacy - Indiranagar', 'MEDPLUS-BLR-02', '+91 80 4112 3456', 'medplus.ind@epharmacy.com', '78 100 Feet Road, Indiranagar 2nd Stage', 'Bangalore', 'Karnataka', '560038', 'KA-BLR-2024-PH-3341', 4.8, u2.lastInsertRowid],
+    ['Wellness Forever - Koramangala', 'WELLNESS-BLR-03', '+91 80 4122 8899', 'wellness.kor@epharmacy.com', '45 80 Feet Road, 4th Block Koramangala', 'Bangalore', 'Karnataka', '560034', 'KA-BLR-2024-PH-8812', 4.9, u3.lastInsertRowid],
+    ['Care Chemists - Whitefield', 'CARE-BLR-04', '+91 80 6789 2200', 'care.whi@epharmacy.com', '302 ITPL Main Road, Hope Farm Junction', 'Bangalore', 'Karnataka', '560066', 'KA-BLR-2024-PH-5590', 4.7, u4.lastInsertRowid],
+    ['GreenCross Pharmacy - HSR Layout', 'GCROSS-BLR-05', '+91 80 2572 4411', 'greencross.hsr@epharmacy.com', '12 27th Main Road, Sector 1 HSR Layout', 'Bangalore', 'Karnataka', '560102', 'KA-BLR-2024-PH-7714', 4.8, u5.lastInsertRowid],
+    ['Trust Chemist - Jayanagar', 'TRUST-BLR-06', '+91 80 2663 8811', 'trust.jayanagar@epharmacy.com', '56 11th Main Road, 4th Block Jayanagar', 'Bangalore', 'Karnataka', '560011', 'KA-BLR-2024-PH-9923', 4.8, u6.lastInsertRowid],
+
+    // Mumbai
+    ['Apollo Pharmacy - Fort Mumbai', 'APOLLO-BOM-01', '+91 22 2267 1144', 'apollo.mumbai@epharmacy.com', '82 Mahatma Gandhi Road, Kala Ghoda, Fort', 'Mumbai', 'Maharashtra', '400001', 'MH-MUM-2024-PH-4412', 4.9, u7.lastInsertRowid],
+    ['Wellness Forever - Bandra West', 'WELLNESS-BOM-02', '+91 22 2642 9900', 'wellness.bandra@epharmacy.com', '14 Hill Road, Opposite St. Joseph School, Bandra West', 'Mumbai', 'Maharashtra', '400050', 'MH-MUM-2024-PH-6721', 4.9, u8.lastInsertRowid],
+    ['Noble Plus Pharmacy - Andheri West', 'NOBLE-BOM-03', '+91 22 2673 4500', 'noble.andheri@epharmacy.com', '22 Lokhandwala Complex, Main Market, Andheri West', 'Mumbai', 'Maharashtra', '400058', 'MH-MUM-2024-PH-8109', 4.8, u9.lastInsertRowid],
+
+    // Delhi NCR
+    ['Metro Meds - Connaught Place', 'METRO-DEL-01', '+91 11 2334 5678', 'metro.delhi@epharmacy.com', '18 Inner Circle, Connaught Place', 'Delhi', 'Delhi', '110001', 'DL-CP-2024-PH-4421', 4.9, u10.lastInsertRowid],
+    ['Guardian Pharmacy - South Extension', 'GUARD-DEL-02', '+91 11 2625 3344', 'guardian.delhi@epharmacy.com', 'G-14 Main Market, South Extension Part 1', 'Delhi', 'Delhi', '110049', 'DL-SE-2024-PH-3312', 4.8, u11.lastInsertRowid],
+    ['Apollo Pharmacy - Sector 18 Noida', 'APOLLO-NOI-03', '+91 120 422 7788', 'apollo.noida@epharmacy.com', 'P-11 Ocean Plaza, Sector 18', 'Noida', 'Uttar Pradesh', '201301', 'UP-NOI-2024-PH-7711', 4.7, u12.lastInsertRowid],
+
+    // Hyderabad
+    ['MedPlus - Banjara Hills', 'MEDPLUS-HYD-01', '+91 40 2335 1200', 'medplus.hyd@epharmacy.com', 'Road No. 12, Opposite MLA Colony, Banjara Hills', 'Hyderabad', 'Telangana', '500034', 'TG-HYD-2024-PH-5511', 4.9, u13.lastInsertRowid],
+    ['Apollo Pharmacy - Hitec City', 'APOLLO-HYD-02', '+91 40 4488 3300', 'apollo.hyd@epharmacy.com', 'Cyber Towers Road, Near Mindspace, Madhapur', 'Hyderabad', 'Telangana', '500081', 'TG-HYD-2024-PH-6622', 4.8, u14.lastInsertRowid],
+
+    // Chennai
+    ['Apollo Pharmacy - T. Nagar', 'APOLLO-CHE-01', '+91 44 2815 4400', 'apollo.chennai@epharmacy.com', '45 Usman Road, Near Panagal Park, T. Nagar', 'Chennai', 'Tamil Nadu', '600017', 'TN-CHE-2024-PH-7788', 4.9, u15.lastInsertRowid],
+  ];
+
+  for (const ph of pharmaciesList) {
+    insertPharmacy.run(...ph);
+  }
+
+  console.log(`✅ ${pharmaciesList.length} Pharmacies seeded`);
 
   // Seed categories
   const insertCategory = db.prepare(`
