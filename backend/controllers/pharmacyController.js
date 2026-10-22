@@ -114,7 +114,7 @@ exports.getMyOrders = (req, res) => {
 
     const countParams = [pharmacy.id];
     if (status) countParams.push(status);
-    const total = db.prepare(`SELECT COUNT(*) as c FROM orders ${where}`).get(...countParams).c;
+    const total = db.prepare(`SELECT COUNT(*) as c FROM orders o ${where}`).get(...countParams).c;
 
     res.json({ orders: ordersWithItems, pagination: { total, page: parseInt(page), limit: parseInt(limit) } });
   } catch (err) {

@@ -29,7 +29,9 @@ export default function AdminDashboard() {
       await adminAPI.updateOrderStatus(id, { status });
       toast.success('Status updated');
       fetchDashboard();
-    } catch (err) { toast.error('Update failed'); }
+    } catch (err) { 
+      toast.error(err.response?.data?.error || 'Update failed'); 
+    }
   };
 
   if (loading) return <div className="p-6">Loading dashboard...</div>;
@@ -136,10 +138,14 @@ export default function AdminDashboard() {
                         onChange={(e) => handleUpdateOrderStatus(order.id, e.target.value)}
                         disabled={order.order_status === 'delivered' || order.order_status === 'cancelled'}
                       >
+                        <option value="prescription_verification">Prescription Verification</option>
                         <option value="placed">Placed</option>
+                        <option value="payment_confirmed">Payment Confirmed</option>
                         <option value="confirmed">Confirmed</option>
                         <option value="preparing">Preparing</option>
+                        <option value="packed">Packed</option>
                         <option value="shipped">Shipped</option>
+                        <option value="out_for_delivery">Out for Delivery</option>
                         <option value="delivered">Delivered</option>
                         <option value="cancelled">Cancelled</option>
                       </select>
